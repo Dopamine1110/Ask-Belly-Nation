@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask Belly Nation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ffe5b4, #ffb6b9);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 95%;
+      max-width: 460px;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+    h1 {
+      color: #ff5f6d;
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+    h2 { /* Added style for the new heading */
+        color: #333;
+        font-size: 20px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+    p {
+      color: #444;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      background: #ffe0b2;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      margin: 6px;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+    .btn:hover {
+      background: #ffb74d;
+      color: #fff;
+      transform: scale(1.05);
+    }
+    /* Default 'selected' class for Mood and Categories (Red) */
+    .selected {
+      background: #ff5f6d !important;
+      color: #fff !important;
+    }
+    
+    /* Step 2 Specific Styles (Type selection) */
+    #step2 .btn.veg-selected {
+        background: #4CAF50 !important; /* Green for Veg */
+        color: #fff !important;
+    }
+    #step2 .btn.nonveg-selected {
+        background: #ff3b47 !important; /* Red for Non-Veg */
+        color: #fff !important;
+    }
+    
+    .result {
+      margin-top: 25px;
+      color: #333;
+      animation: fadeIn 0.6s ease;
+    }
+    .back {
+      background: #ff5f6d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .back:hover {
+      background: #ff3b47;
+    }
+    .back-step { /* Style for step back buttons */
+        background: #ccc;
+        color: #333;
+        margin-top: 15px;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+    .back-step:hover {
+        background: #aaa;
+        color: white;
+    }
+    input[type="number"] {
+      width: 70px;
+      padding: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* NEW STYLE ADDED FOR DISCLAIMER */
+    .disclaimer {
+        font-size: 10px;
+        color: #888;
+        margin-top: 10px;
+        padding: 0 10px;
+        line-height: 1.2;
+    }
+
+    /* MODAL STYLES */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; 
+        z-index: 1; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgba(0,0,0,0.4); 
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 400px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        animation: fadeIn 0.5s;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: #ff5f6d;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .better-match-btn {
+        background: #ffb74d;
+        color: white;
+        padding: 5px 10px;
+        margin-left: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        border: none;
+        cursor: pointer;
+    }
+    .better-match-btn:hover {
+        background: #ff9800;
+    }
+    .modal h4 {
+        color: #ff5f6d;
+        margin-top: 5px;
+    }
+    /* Specific styles for drink modal content */
+    #modalDrinkDetails {
+        font-size: 14px;
+        color: #555;
+        margin-top: 10px;
+    }
+    
+    /* CUSTOM STYLE FOR THE BIG BLUE BUTTON */
+    .big-blue-btn {
+        background: #3498db !important; /* Blue color */
+        color: white !important;
+        padding: 12px 25px !important;
+        font-size: 16px !important;
+        border-radius: 12px !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .big-blue-btn:hover {
+        background: #2980b9 !important; /* Darker blue on hover */
+        transform: scale(1.03) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <h1>Ask Belly Nation 🍔</h1>
+
+    <div id="step1">
+      <p>Step 1️⃣: What’s your current mood?</p>
+      <div id="moods"></div>
+    </div>
+
+    <div id="step2" style="display:none;">
+      <p>Step 2️⃣: Choose your type</p>
+      <button class="btn" data-type="Veg" onclick="selectType(this, 'Veg')">🥗 Veg</button>
+      <button class="btn" data-type="Non-Veg" onclick="selectType(this, 'Non-Veg')">🍗 Non-Veg</button>
+      <br>
+      <button class="back-step" onclick="backToStep1()">← Back to Mood</button>
+    </div>
+
+    <div id="step3" style="display:none;">
+      
+      <h2>Choose your path:</h2>
+      
+      <p>Enter how many dishes you want 🍽️</p>
+      <input type="number" id="dishCount" min="1" max="10" placeholder="e.g. 3" />
+      
+      <button class="btn" style="background:#5cb85c; color: white;" onclick="showSuggestions(true)">Skip Selection & Find Best Match</button>
+      
+      <p style="font-size: 14px; color: #ff5f6d; font-weight: bold; margin-top: 25px; margin-bottom: 10px; border-top: 1px solid #eee; padding-top: 15px;">
+        To fine-tune your search or if the options below aren't visible, please scroll down to view the optional categories!
+      </p>
+
+      <p>Step 3️⃣: Optional Tuning</p>
+      <p>Choose one or more categories for a wider variety:</p>
+      <div id="categories"></div>
+      
+      <button class="btn big-blue-btn" onclick="showSuggestions()">Get Suggestions 💡</button>
+      <br>
+      <button class="back-step" onclick="backToStep2()">← Back to Type</button>
+    </div>
+
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+  
+  <div id="recommendationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h4>Highest Accuracy Match Found! ⭐</h4>
+      <p id="modalPText">This dish is the **best match** for your **<span id="modalMood"></span>** mood and is:</p>
+      <h3 id="modalRecommendation"></h3>
+      <p style="font-size: 12px; color: #777;" id="modalMatchDetails">
+        *It better aligns with the required **<span id="modalTags"></span>** tags by matching <span id="modalScore"></span> tags.
+      </p>
+      <p id="modalDrinkDetails" style="display: none;">
+        This drink is an ideal choice to support your **<span id="modalMoodDrink"></span>** mood, focusing on **hydration and comfort**.
+      </p>
+    </div>
+  </div>
+
+<script>
+    const moods = [
+      "Angry","Sad","Loved","Calm","Happy","Lazy","Anxious",
+      "Bored","Hungry","Energetic","Neutral","Mindful","Confident"
+    ];
+
+    // MAPPING: Maps mood to the required nutritional tags
+    const moodToTag = {
+        Angry: ["LeanProtein", "BalancedMeal"],
+        Sad: ["HealthyFat", "ColorfulVeg"],
+        Loved: ["BalancedMeal", "Comforting"],
+        Calm: ["HighFiber", "Comforting"],
+        Happy: ["ColorfulVeg", "BalancedMeal"],
+        Lazy: ["LeanProtein", "HighFiber"],
+        Anxious: ["MagnesiumRich", "Comforting"],
+        Bored: ["HighFiber", "Satisfying"],
+        Hungry: ["LeanProtein", "Satisfying"],
+        Energetic: ["ColorfulVeg", "Hydration"],
+        Neutral: ["BalancedMeal"],
+        Mindful: ["ColorfulVeg", "BalancedMeal"],
+        Confident: ["HealthyFat", "BalancedMeal"]
+    };
+
+    // 10/10 Psychology explanations (Retained)
+    const moodReasons = {
+      Angry: "When emotions run high, your body needs balance. Choosing **whole grains and lean protein** helps keep your energy steady, preventing the quick sugar crashes that can make you feel more irritable.",
+      Sad: "To help lift your spirits, your brain loves calming, healthy fats and nutrients. Think of meals rich in **colorful vegetables, healthy fat, or nuts**—these foods are linked to a better, more stable mood over time.",
+      Loved: "Keep your positive vibes flowing with **balanced, hearty meals**. Focus on healthy fats and fibers to keep your brain working smoothly and your feelings of well-being strong.",
+      Calm: "Maintain your peace with food that supports long-lasting, stable energy. **Fiber-rich foods** (like vegetables and whole grains) keep your tummy happy and support the healthy connection between your gut and brain.",
+      Happy: "Celebrate your cheerfulness by choosing foods that sustain it! Meals made with **natural, whole ingredients** help prevent sudden energy drops that could spoil your good mood later.",
+      Lazy: "If you feel low on energy, avoid quick fixes like refined sugar. Choose meals with **good protein and fiber** to give you slow-release fuel, helping you shake off that sluggish feeling without a crash.",
+      Anxious: "Anxiety can make your stomach uneasy. Skip the high caffeine and sugary drinks. Gentle foods rich in **magnesium** (like leafy greens and nuts) are known to have a natural, calming effect.",
+      Bored: "Instead of eating just to pass the time, pick foods that are **filling and satisfying** (high in fiber and protein). This keeps your body satisfied and stops you from mindlessly snacking.",
+      Hungry: "When you're truly hungry, you need focus! Choose satisfying meals rich in **protein and fiber**. These are the best for controlling hunger and keeping your mind sharp.",
+      Energetic: "Sustain your high motivation by eating a variety of **colorful fruits and vegetables** to get all your essential nutrients. And don't forget to **drink enough water**—it's vital for your brain and mood!",
+      Neutral: "A steady, neutral mood is a sign of balance. Keep it that way by following a **varied, wholesome diet** that includes plenty of fruits, vegetables, and whole grains, just as health experts recommend.",
+      Mindful: "Your focus on well-being means choosing foods that nurture you. Prioritize **antioxidants** (from brightly colored produce) to keep your body healthy and support a clear, focused mind.",
+      Confident: "Fuel your strong mindset with foods that promote mental clarity. Choose meals that provide essential **B vitamins** (found in whole grains and eggs) and **healthy fats** for a sharp, resilient brain."
+    };
+
+    // NEW MENU STRUCTURE: Each dish now has an array of nutritional/craving tags
+    const menu = {
+      Veg: {
+        Pizza: [
+            {name: "Spicy Panner Pizza", tags: ["LeanProtein", "Comforting", "Satisfying"]},
+            {name: "Margherita Pizza", tags: ["Comforting"]},
+            {name: "Classic veg pizza", tags: ["Comforting"]},
+            {name: "Peri peri veg over load pizza", tags: ["ColorfulVeg", "Comforting"]}
+        ],
+        Burger: [
+            {name: "Classic veg burger", tags: ["Comforting", "Satisfying"]},
+            {name: "Classic veg double patty burger", tags: ["Comforting", "Satisfying"]},
+            {name: "Peri peri paneer burger", tags: ["LeanProtein", "Satisfying"]}
+        ],
+        Starters: [
+            {name: "Chilli mushroom starter", tags: ["MagnesiumRich", "ColorfulVeg"]},
+            {name: "Chilli baby corn starter", tags: ["ColorfulVeg"]},
+            {name: "Paneer majestic star", tags: ["LeanProtein"]},
+            {name: "Crispy corn starter", tags: ["ColorfulVeg"]},
+            {name: "Mushroom 65 starter", tags: ["MagnesiumRich"]},
+            {name: "Veg manchuria starter", tags: ["Satisfying"]}
+        ],
+        Fries: [
+            {name: "Classic fries small", tags: ["Comforting"]},
+            {name: "Classic fries medium", tags: ["Comforting"]},
+            {name: "Classic fries large", tags: ["Comforting", "Satisfying"]},
+            {name: "Jalapeno loaded fries", tags: ["Comforting"]},
+            {name: "Chilly cheese loaded fries", tags: ["Comforting"]}
+        ],
+        "Fried Rice": [
+            {name: "Veg fried rice", tags: ["HighFiber", "BalancedMeal"]},
+            {name: "Veg schezwan fried rice", tags: ["BalancedMeal"]},
+            {name: "Paneer fried rice", tags: ["LeanProtein", "BalancedMeal"]},
+            {name: "Kaju fried rice", tags: ["HealthyFat", "BalancedMeal"]},
+            {name: "Mushroom fried rice", tags: ["MagnesiumRich", "BalancedMeal"]},
+            {name: "Mix veg fried rice", tags: ["ColorfulVeg", "BalancedMeal"]}
+        ],
+        Noodles: [
+            {name: "Veg noodles", tags: ["BalancedMeal"]},
+            {name: "Veg manchurian noodles", tags: ["BalancedMeal"]}
+        ],
+        Mocktails: [
+            {name: "Virgin mojito mocktail", tags: ["Hydration"]},
+            {name: "Blue lagoon mocktail", tags: ["Hydration"]},
+            {name: "Berry berry strawberry mocktail", tags: ["Hydration", "ColorfulVeg"]},
+            {name: "Belly sunset mocktail", tags: ["Hydration"]},
+            {name: "Nimbu fizz mocktail", tags: ["Hydration"]},
+            {name: "Masala pop Mocktail", tags: ["Hydration"]},
+            {name: "Kala khatta high mocktail", tags: ["Hydration"]},
+            {name: "Blueberry burst mocktail", tags: ["Hydration", "ColorfulVeg"]}
+        ],
+        Shakes: [
+            {name: "Kitkat shake", tags: ["Comforting"]},
+            {name: "Oreo shake", tags: ["Comforting"]},
+            {name: "Chocolate shake", tags: ["Comforting"]},
+            {name: "Strawberry shake", tags: ["Comforting"]},
+            {name: "Butterscoth shake", tags: ["Comforting"]},
+            {name: "Vanilla shake", tags: ["Comforting"]}
+        ],
+        Drinks: [
+            {name: "Premium mineral waterbottle", tags: ["Hydration"]},
+            {name: "Predator energy drink", tags: ["Hydration"]}
+        ]
+      },
+      "Non-Veg": {
+        Pizza: [
+            {name: "Classic Chicken Pizza", tags: ["LeanProtein", "Comforting", "Satisfying"]},
+            {name: "Crispy Chicken Pizza", tags: ["LeanProtein", "Comforting"]},
+            {name: "Chicken Overload pizza", tags: ["LeanProtein", "Comforting", "Satisfying"]}
+        ],
+        Burger: [
+            {name: "Classic Chicken Burger", tags: ["LeanProtein", "Satisfying"]},
+            {name: "Egg khema burger", tags: ["LeanProtein", "Satisfying", "HealthyFat"]}, // Egg yolk adds HealthyFat
+            {name: "Double trouble chicken burger", tags: ["LeanProtein", "Satisfying"]},
+            {name: "Chicken maharaja burger", tags: ["LeanProtein", "Satisfying"]},
+            {name: "Peri peri crispy burger", tags: ["LeanProtein", "Satisfying"]}
+        ],
+        Starters: [
+            {name: "2pc fried chicken", tags: ["LeanProtein", "Satisfying"]},
+            {name: "1pc fried chicken", tags: ["LeanProtein", "Satisfying"]},
+            {name: "Desi bbq wings", tags: ["LeanProtein", "ColorfulVeg"]}, 
+            {name: "Chicken wings 2pc", tags: ["LeanProtein"]},
+            {name: "Chicken manchurian starter", tags: ["LeanProtein", "ColorfulVeg"]}, 
+            {name: "Chicken majestic starter", tags: ["LeanProtein"]},
+            {name: "Chicken 65 starter", tags: ["LeanProtein", "ColorfulVeg"]}, 
+            {name: "Dragon chicken starter", tags: ["LeanProtein", "ColorfulVeg"]} 
+        ],
+        Fries: [
+            {name: "Loaded chicken fries", tags: ["LeanProtein", "Comforting"]}
+        ],
+        "Fried Rice": [
+            {name: "Egg fried rice", tags: ["LeanProtein", "BalancedMeal", "HealthyFat", "ColorfulVeg"]}, 
+            {name: "Chicken fried rice", tags: ["LeanProtein", "BalancedMeal", "ColorfulVeg"]}, 
+            {name: "Chicken schezwan Fried rice", tags: ["LeanProtein", "BalancedMeal", "ColorfulVeg"]},
+            {name: "Mix non veg fried rice", tags: ["LeanProtein", "BalancedMeal", "HealthyFat", "ColorfulVeg"]} 
+        ],
+        Noodles: [
+            {name: "Egg hakka noodles", tags: ["LeanProtein", "BalancedMeal", "HealthyFat"]}, 
+            {name: "Egg noodles", tags: ["LeanProtein", "BalancedMeal", "HealthyFat"]},
+            {name: "Butter chilli garlic chicken noodles", tags: ["LeanProtein", "BalancedMeal", "HealthyFat", "ColorfulVeg"]} 
+        ],
+        Mocktails: [
+            {name: "Virgin mojito mocktail", tags: ["Hydration"]},
+            {name: "Blue lagoon mocktail", tags: ["Hydration"]},
+            {name: "Berry berry strawberry mocktail", tags: ["Hydration", "ColorfulVeg"]},
+            {name: "Belly sunset mocktail", tags: ["Hydration"]},
+            {name: "Nimbu fizz mocktail", tags: ["Hydration"]},
+            {name: "Masala pop Mocktail", tags: ["Hydration"]},
+            {name: "Kala khatta high mocktail", tags: ["Hydration"]},
+            {name: "Blueberry burst mocktail", tags: ["Hydration", "ColorfulVeg"]}
+        ],
+        Shakes: [
+            {name: "Kitkat shake", tags: ["Comforting"]},
+            {name: "Oreo shake", tags: ["Comforting"]},
+            {name: "Chocolate shake", tags: ["Comforting"]},
+            {name: "Strawberry shake", tags: ["Comforting"]},
+            {name: "Butterscoth shake", tags: ["Comforting"]},
+            {name: "Vanilla shake", tags: ["Comforting"]}
+        ],
+        Drinks: [
+            {name: "Premium mineral waterbottle", tags: ["Hydration"]},
+            {name: "Predator energy drink", tags: ["Hydration"]}
+        ]
+      }
+    };
+    
+    // Define which categories are 'Food' and which are 'Drinks'
+    const FOOD_CATEGORIES = ["Pizza", "Burger", "Starters", "Fries", "Fried Rice", "Noodles"];
+    const DRINK_CATEGORIES = ["Mocktails", "Shakes", "Drinks"];
+
+    let selectedMood = null;
+    let selectedType = null;
+    let selectedCategories = [];
+    let sessionRecommendedDishes = new Set(); // Tracks all dishes recommended/suggested in the current session
+
+    // Step 1: mood buttons
+    const moodDiv = document.getElementById("moods");
+    moods.forEach(m => {
+      const btn = document.createElement("button");
+      btn.className = "btn";
+      btn.innerText = m;
+      btn.onclick = (event) => selectMood(m, event.target);
+      moodDiv.appendChild(btn);
+    });
+
+    // Step 3: categories
+    const allCategories = [...FOOD_CATEGORIES, ...DRINK_CATEGORIES];
+    const catDiv = document.getElementById("categories");
+    allCategories.forEach(c => {
+      const btn = document.createElement("button");
+      btn.className = "btn";
+      btn.innerText = c;
+      btn.onclick = () => toggleCategory(btn, c);
+      catDiv.appendChild(btn);
+    });
+
+    function selectMood(mood, btn) {
+      selectedMood = mood;
+      document.querySelectorAll("#moods .btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+    }
+
+    function selectType(btn, type) {
+      selectedType = type;
+      document.querySelectorAll("#step2 .btn").forEach(b => {
+          b.classList.remove("veg-selected", "nonveg-selected");
+      });
+      if (type === 'Veg') {
+          btn.classList.add("veg-selected");
+      } else if (type === 'Non-Veg') {
+          btn.classList.add("nonveg-selected");
+      }
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("step3").style.display = "block";
+    }
+    
+    function backToStep1() {
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("step1").style.display = "block";
+    }
+    
+    function backToStep2() {
+        document.getElementById("step3").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+        
+        document.querySelectorAll("#step2 .btn").forEach(btn => {
+            btn.classList.remove("veg-selected", "nonveg-selected"); 
+            const buttonType = btn.getAttribute('data-type');
+            if (selectedType === buttonType) {
+                if (selectedType === 'Veg') {
+                    btn.classList.add("veg-selected");
+                } else if (selectedType === 'Non-Veg') {
+                    btn.classList.add("nonveg-selected");
+                }
+            }
+        });
+        
+        document.querySelectorAll("#categories .btn").forEach(btn => {
+            // Check the current list of selected categories, not just what was visible
+            if (selectedCategories.includes(btn.innerText)) {
+                btn.classList.add("selected");
+            } else {
+                btn.classList.remove("selected");
+            }
+        });
+    }
+
+    function toggleCategory(btn, category) {
+      // Only allow food categories (or drinks if they were originally allowed) in selection for this logic
+      if (FOOD_CATEGORIES.includes(category) || DRINK_CATEGORIES.includes(category)) { 
+          if (selectedCategories.includes(category)) {
+            selectedCategories = selectedCategories.filter(c => c !== category);
+            btn.classList.remove("selected");
+          } else {
+            selectedCategories.push(category);
+            btn.classList.add("selected");
+          }
+      }
+    }
+    
+    // Utility to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+
+    // ************************************************************
+    // CORE LOGIC: showSuggestions() - MODIFIED FOR CATEGORY SELECTION GUARANTEE
+    // ************************************************************
+    function showSuggestions(skipCategories = false) {
+      const count = parseInt(document.getElementById("dishCount").value);
+      
+      const foodCategoriesSelected = selectedCategories.filter(cat => FOOD_CATEGORIES.includes(cat));
+      const drinkCategoriesSelected = selectedCategories.filter(cat => DRINK_CATEGORIES.includes(cat));
+
+      if (!skipCategories && foodCategoriesSelected.length === 0) {
+        alert("Please select at least one FOOD category for suggestions, or press 'Skip Selection & Find Best Match'!");
+        return;
+      }
+      
+      if (!count || count <= 0) {
+        alert("Please enter a valid number of dishes!");
+        return;
+      }
+      
+      const availableMenu = menu[selectedType];
+      if (!availableMenu) {
+          alert(`Menu for type "${selectedType}" not found!`);
+          return;
+      }
+      
+      const categoriesToUse = skipCategories ? FOOD_CATEGORIES : foodCategoriesSelected;
+      const categoriesLabel = skipCategories ? "Best Food Matches (100% Mood Match)" : categoriesToUse.join(", "); 
+      
+      sessionRecommendedDishes.clear();
+      
+      const requiredTags = moodToTag[selectedMood] || ["BalancedMeal"];
+      let finalSuggestions = [];
+      let moodMatchingSuggestions = []; 
+      
+      // 1. OPTIONAL TUNING PATH (Guarantee one from each selected category)
+      if (!skipCategories) {
+          let allDishesInSelectedCategories = [];
+
+          // 1a. Find the single best mood-matching dish from EACH selected category
+          categoriesToUse.forEach(cat => {
+              const dishes = availableMenu[cat];
+              if (dishes) {
+                  let bestDish = null;
+                  let maxMatchScore = -1; // Use -1 to ensure 0-match dishes are considered if no better match exists
+                  
+                  // Collect all dishes in selected categories for later use
+                  dishes.forEach(dish => {
+                      if(!allDishesInSelectedCategories.some(d => d.name === dish.name)) {
+                          allDishesInSelectedCategories.push(dish);
+                      }
+                  });
+
+
+                  // Find the best dish for this category
+                  dishes.forEach(dish => {
+                      let currentScore = 0;
+                      requiredTags.forEach(tag => {
+                          if (dish.tags.includes(tag)) {
+                              currentScore++;
+                          }
+                      });
+                      
+                      // Prioritize higher score, and ensure it hasn't been added yet (though technically safe here)
+                      if (currentScore > maxMatchScore) {
+                          maxMatchScore = currentScore;
+                          bestDish = {
+                              name: dish.name,
+                              score: currentScore,
+                              isMoodMatch: currentScore > 0,
+                              category: cat
+                          };
+                      } 
+                  });
+                  
+                  // Add the best dish from this category if a unique one was found and we still need suggestions
+                  if (bestDish && !finalSuggestions.includes(bestDish.name)) {
+                      finalSuggestions.push(bestDish.name);
+                      sessionRecommendedDishes.add(bestDish.name);
+                      if(bestDish.isMoodMatch) {
+                          moodMatchingSuggestions.push(bestDish.name);
+                      }
+                  }
+              }
+          });
+          
+          // If the number of selected categories is greater than or equal to the dish count, we trim and stop.
+          if (finalSuggestions.length >= count) {
+              // We ensure to only take dishes that were selected in the first pass
+              finalSuggestions = finalSuggestions.slice(0, count); 
+          } 
+          // 1b. Fill remaining slots with the next best unique dishes from the selected categories
+          else {
+              let remainingNeeded = count - finalSuggestions.length;
+              let potentialFillers = [];
+
+              // Collect all unique dishes from the selected food categories (excluding those already chosen)
+              allDishesInSelectedCategories.forEach(dish => {
+                  if (!finalSuggestions.includes(dish.name)) {
+                      let matchScore = 0;
+                      requiredTags.forEach(tag => {
+                          if (dish.tags.includes(tag)) {
+                              matchScore++;
+                          }
+                      });
+                      potentialFillers.push({name: dish.name, score: matchScore});
+                  }
+              });
+              
+              // Sort by score (descending) and shuffle for tie-breaking
+              potentialFillers.sort((a, b) => b.score - a.score);
+              shuffleArray(potentialFillers);
+              
+              for (let i = 0; i < potentialFillers.length && remainingNeeded > 0; i++) {
+                  const dishName = potentialFillers[i].name;
+                  const dishScore = potentialFillers[i].score;
+                  
+                  if (!finalSuggestions.includes(dishName)) {
+                      finalSuggestions.push(dishName);
+                      sessionRecommendedDishes.add(dishName);
+                      if (dishScore > 0) {
+                          moodMatchingSuggestions.push(dishName);
+                      }
+                      remainingNeeded--;
+                  }
+              }
+          }
+      } 
+      
+      // 2. SKIP CATEGORY SELECTION (Use the original mood-match priority logic)
+      else { 
+          // Original logic for "Skip Selection & Find Best Match"
+          let allMoodMatchingDishes = [];
+          let allGeneralDishes = [];
+          
+          FOOD_CATEGORIES.forEach(cat => {
+              const dishes = availableMenu[cat];
+              if (dishes) {
+                  dishes.forEach(dish => {
+                      const isMoodMatch = requiredTags.some(tag => dish.tags.includes(tag));
+                      
+                      if (isMoodMatch && !allMoodMatchingDishes.includes(dish.name)) {
+                          allMoodMatchingDishes.push(dish.name);
+                      } 
+                      
+                      if (!allGeneralDishes.includes(dish.name)) {
+                          allGeneralDishes.push(dish.name);
+                      }
+                  });
+              }
+          });
+          
+          shuffleArray(allMoodMatchingDishes);
+          shuffleArray(allGeneralDishes);
+
+          // Primary Selection Pass (Prioritize Mood Matches)
+          const moodMatchesNeeded = count; 
+          
+          for (let i = 0; i < allMoodMatchingDishes.length && finalSuggestions.length < moodMatchesNeeded; i++) {
+              const dishName = allMoodMatchingDishes[i];
+              if (!finalSuggestions.includes(dishName)) {
+                  finalSuggestions.push(dishName);
+                  moodMatchingSuggestions.push(dishName);
+                  sessionRecommendedDishes.add(dishName); 
+              }
+          }
+          
+          // Fill Selection Pass (Fill remaining with General Dishes)
+          if (finalSuggestions.length < count) {
+              let remainingNeeded = count - finalSuggestions.length;
+              
+              for (let i = 0; i < allGeneralDishes.length && remainingNeeded > 0; i++) {
+                  const dishName = allGeneralDishes[i];
+                  if (!finalSuggestions.includes(dishName)) {
+                      finalSuggestions.push(dishName);
+                      sessionRecommendedDishes.add(dishName);
+                      remainingNeeded--;
+                  }
+              }
+          }
+      }
+
+      // 3. LAST RESORT (Allow repetition if still short)
+      if (finalSuggestions.length < count) {
+           let remainingNeeded = count - finalSuggestions.length;
+           for (let i = 0; i < remainingNeeded; i++) {
+               if(finalSuggestions.length > 0) {
+                   // Repeat dishes already selected
+                   finalSuggestions.push(finalSuggestions[i % finalSuggestions.length]); 
+               } else {
+                   // Fallback if no dishes were found at all (menu empty)
+                   finalSuggestions.push("Sorry, no unique dish found.");
+               }
+           }
+      }
+      
+      // Re-shuffle the final list to mix mood matches and general matches (especially relevant for the "skip" path)
+      shuffleArray(finalSuggestions);
+
+      // Get psychology text
+      const reason = moodReasons[selectedMood] || "Food helps balance your emotions and energy naturally.";
+      
+      const disclaimer = "<p class='disclaimer'>*These suggestions are based on general principles of Nutritional Psychology regarding how specific nutrients support mental well-being and energy balance. They are not medical advice.</p>";
+
+
+      // --- FINAL OUTPUT GENERATION ---
+      document.getElementById("step3").style.display = "none";
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "block";
+      
+      let categorizedList = '';
+      const moodMatchesSet = new Set(moodMatchingSuggestions);
+      
+      finalSuggestions.forEach(dish => {
+          const isMatch = moodMatchesSet.has(dish); 
+          const moodLabel = isMatch ? '⭐ MOOD MATCH' : '🍽️ GENERAL MATCH';
+          const style = isMatch ? 'font-weight: bold; color: #ff5f6d;' : 'color: #333;';
+          
+          // NOTE: The 'Find a Better Match' button logic is intentionally removed as requested/maintained from the original prompt's JS code.
+          let recommendationButton = ''; 
+          
+          categorizedList += `<li style="list-style: none; margin: 8px 0; padding: 4px; border-left: 3px solid ${isMatch ? '#ff5f6d' : '#ccc'};">
+                                <span style="${style}">${dish}</span> (${moodLabel})
+                                ${recommendationButton}
+                             </li>`;
+      });
+
+      const tagsUsed = requiredTags.join(", "); 
+      
+      // Suggest Drink Button Logic
+      let drinkSuggestionButton = '';
+      // Show the drink button ONLY if skipping categories or if a drink category was selected in step 3
+      if (skipCategories || drinkCategoriesSelected.length > 0) {
+          drinkSuggestionButton = `<button class="btn" style="background: #3498db; color: white; margin-top: 15px;" onclick="suggestDrink()">Wanna suggest me a drink? 🍹</button>`;
+      }
+
+
+      resultDiv.innerHTML = `
+        <h3>💬 Mood: ${selectedMood}</h3>
+        <h3>🥗 Type: ${selectedType}</h3>
+        <p>🍴 Categories Used: ${categoriesLabel} | Dishes Requested: ${count}</p>
+        
+        ${drinkSuggestionButton}
+        
+        <h4>✨ Belly Nation Suggestions:</h4>
+        <ul style="text-align:left; padding-left: 20px;">${categorizedList}</ul>
+        
+        <h4>🧠 Mood Psychology: ${selectedMood}</h4> 
+        <p style="color:#555;">${reason}</p>
+        
+        <p class='disclaimer'>Priority Tags Used for Selection: ${tagsUsed}</p>
+        ${disclaimer} 
+        <button class="back" onclick="reset()">← Start Again</button>
+      `;
+    }
+
+    // ************************************************************
+    // UPDATED FEATURE: RECOMMENDATION MODAL FUNCTIONS (KEPT FOR COMPLETENESS)
+    // ************************************************************
+
+    // Helper to get the category of a dish
+    function getCategoryForDish(dishName) {
+        for (const cat in menu[selectedType]) {
+            if (menu[selectedType][cat].some(dish => dish.name === dishName)) {
+                return cat;
+            }
+        }
+        return null;
+    }
+
+    // Helper to determine if a category is Food or Drink
+    function getCategoryType(categoryName) {
+        if (FOOD_CATEGORIES.includes(categoryName)) return 'Food';
+        if (DRINK_CATEGORIES.includes(categoryName)) return 'Drink';
+        return 'Other';
+    }
+    
+    // Food Match Modal Setup
+    function setupFoodModal(finalMatch) {
+        const modal = document.getElementById('recommendationModal');
+        document.getElementById('modalPText').style.display = 'block';
+        document.getElementById('modalMatchDetails').style.display = 'block';
+        document.getElementById('modalDrinkDetails').style.display = 'none';
+
+        document.getElementById('modalMood').innerText = selectedMood;
+        document.getElementById('modalRecommendation').innerText = finalMatch.name;
+        document.getElementById('modalTags').innerText = finalMatch.tags;
+        document.getElementById('modalScore').innerText = finalMatch.score;
+
+        document.getElementById('modalRecommendation').style.color = '#4CAF50'; 
+        modal.querySelector('h4').innerText = 'Highest Accuracy Food Match Found! ⭐';
+        modal.style.display = "block";
+    }
+
+    // Drink Match Modal Setup (SIMPLIFIED)
+    function setupDrinkModal(finalMatch) {
+        const modal = document.getElementById('recommendationModal');
+        document.getElementById('modalPText').style.display = 'none';
+        document.getElementById('modalMatchDetails').style.display = 'none';
+        document.getElementById('modalDrinkDetails').style.display = 'block';
+
+        document.getElementById('modalMoodDrink').innerText = selectedMood;
+        document.getElementById('modalRecommendation').innerHTML = `🥤 ${finalMatch.name}`;
+        document.getElementById('modalRecommendation').style.color = '#3498db'; // Blue for drinks
+        modal.querySelector('h4').innerText = 'Best Drink Match Found! 🍹';
+        modal.style.display = "block";
+    }
+
+    // NOTE: This function is now UNUSED in the final result page due to the removal of the button.
+    function recommendBetterMatch(currentDishName) {
+        const currentCategory = getCategoryForDish(currentDishName);
+        const requiredTags = moodToTag[selectedMood];
+        const allDishes = menu[selectedType];
+        const requiredCategoryType = getCategoryType(currentCategory);
+        
+        if (!currentCategory || !requiredTags || requiredCategoryType === 'Other') {
+            alert("Could not find better match info.");
+            return;
+        }
+
+        let bestMatches = [];
+        let maxMatchScore = 0;
+        
+        // 1. ITERATE, SCORE, and FILTER
+        for (const cat of FOOD_CATEGORIES) {
+            // Only search in food categories that were originally selected by the user
+            if (selectedCategories.includes(cat)) {
+                const dishes = allDishes[cat] || [];
+                dishes.forEach(dish => {
+                    // Check for NO REPETITION
+                    if (!sessionRecommendedDishes.has(dish.name)) {
+                        
+                        // Calculate ACCURACY MATCH SCORE
+                        let matchScore = 0;
+                        let matchedTags = [];
+                        requiredTags.forEach(tag => {
+                            if (dish.tags.includes(tag)) {
+                                matchScore++;
+                                matchedTags.push(tag);
+                            }
+                        });
+                        
+                        // 2. PRIORITIZE HIGHEST SCORE
+                        if (matchScore > 0) {
+                            if (matchScore > maxMatchScore) {
+                                maxMatchScore = matchScore;
+                                bestMatches = [{
+                                    name: dish.name, 
+                                    score: matchScore, 
+                                    tags: matchedTags.join(', ')
+                                }];
+                            } else if (matchScore === maxMatchScore) {
+                                bestMatches.push({
+                                    name: dish.name, 
+                                    score: matchScore, 
+                                    tags: matchedTags.join(', ')
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 3. SELECT FINAL DISH (Tie-breaker is random selection)
+        if (bestMatches.length > 0) {
+            shuffleArray(bestMatches); 
+            const finalMatch = bestMatches[0];
+            sessionRecommendedDishes.add(finalMatch.name); 
+            setupFoodModal(finalMatch);
+
+        } else {
+            alert(`Sorry, the entire unique menu for the selected categories has been exhausted. No other unique mood-matching dish found for the mood "${selectedMood}".`);
+        }
+    }
+
+    // NEW FUNCTION: Suggests a mood-matching drink
+    function suggestDrink() {
+        const requiredTags = moodToTag[selectedMood];
+        const allDishes = menu[selectedType];
+        let bestMatches = [];
+        let maxMatchScore = 0;
+        
+        // Determine which drink categories to check (selected by user or all if skip)
+        const categoriesToSearch = selectedCategories.filter(cat => DRINK_CATEGORIES.includes(cat)).length > 0 
+            ? selectedCategories.filter(cat => DRINK_CATEGORIES.includes(cat))
+            : DRINK_CATEGORIES;
+
+        // 1. Iterate over relevant DRINK categories
+        categoriesToSearch.forEach(cat => {
+            const dishes = allDishes[cat] || [];
+            
+            dishes.forEach(dish => {
+                // Check for NO REPETITION
+                if (!sessionRecommendedDishes.has(dish.name)) {
+                    
+                    // Calculate ACCURACY MATCH SCORE
+                    let matchScore = 0;
+                    requiredTags.forEach(tag => {
+                        if (dish.tags.includes(tag)) {
+                            matchScore++;
+                        }
+                    });
+                    
+                    // 2. PRIORITIZE HIGHEST SCORE
+                    if (matchScore > maxMatchScore) {
+                        maxMatchScore = matchScore;
+                        bestMatches = [{name: dish.name}];
+                    } else if (matchScore === maxMatchScore) {
+                        bestMatches.push({name: dish.name});
+                    }
+                }
+            });
+        });
+        
+        // FALLBACK: If maxMatchScore is 0, fall back to prioritizing "Hydration" or "Comforting" 
+        if (maxMatchScore === 0) {
+            bestMatches = [];
+            const fallbackTags = ["Hydration", "Comforting"];
+            let maxFallbackScore = 0;
+
+            categoriesToSearch.forEach(cat => {
+                const dishes = allDishes[cat] || [];
+                dishes.forEach(dish => {
+                    if (!sessionRecommendedDishes.has(dish.name)) {
+                        let fallbackScore = 0;
+                        fallbackTags.forEach(tag => {
+                            if (dish.tags.includes(tag)) {
+                                fallbackScore++;
+                            }
+                        });
+
+                        if (fallbackScore > maxFallbackScore) {
+                            maxFallbackScore = fallbackScore;
+                            bestMatches = [{name: dish.name}];
+                        } else if (fallbackScore === maxFallbackScore && maxFallbackScore > 0) {
+                            bestMatches.push({name: dish.name});
+                        }
+                    }
+                });
+            });
+            // Final fallback if all unique drinks are exhausted.
+            if (bestMatches.length === 0) {
+                categoriesToSearch.forEach(cat => {
+                    const dishes = allDishes[cat] || [];
+                    if (dishes.length > 0) {
+                        // Pick a random dish from the first available drink category
+                        shuffleArray(dishes);
+                        bestMatches.push({name: dishes[0].name});
+                    }
+                });
+            }
+        }
+
+        // 3. SELECT FINAL DRINK
+        if (bestMatches.length > 0) {
+            shuffleArray(bestMatches); 
+            const finalMatch = bestMatches[0];
+            sessionRecommendedDishes.add(finalMatch.name); 
+            setupDrinkModal(finalMatch);
+            
+        } else {
+            alert(`Sorry, the drink menu is completely exhausted or empty.`);
+        }
+        
+    }
+    
+    function closeModal() {
+        document.getElementById('recommendationModal').style.display = "none";
+        // Reset modal styles back to food default when closing
+        document.getElementById('modalRecommendation').style.color = '#4CAF50'; 
+        document.getElementById('recommendationModal').querySelector('h4').innerText = 'Highest Accuracy Match Found! ⭐';
+    }
+
+    function reset() {
+      selectedMood = null;
+      selectedType = null;
+      selectedCategories = [];
+      sessionRecommendedDishes.clear(); // Clear the session tracker on full reset
+      document.querySelectorAll(".selected").forEach(btn => btn.classList.remove("selected"));
+      document.querySelectorAll("#step2 .btn").forEach(b => b.classList.remove("veg-selected", "nonveg-selected"));
+
+      document.getElementById("dishCount").value = "";
+      document.getElementById("result").style.display = "none";
+      document.getElementById("step1").style.display = "block";
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("step3").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
